@@ -14,7 +14,7 @@ export interface User {
   name: string
   email: string
   password: string
-  isAdmin: boolean
+  isAdmin?: boolean
 }
 
 export type UserWithoutId = Omit<User, 'id'>
