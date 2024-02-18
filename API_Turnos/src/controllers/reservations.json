@@ -1,0 +1,11 @@
+[
+    {
+        "id": "1233",
+        "canchaId": 1,
+        "userId": 1,
+        "date": "2022-01-01",
+        "time": "10:00",
+        "duracion": 60,
+        "status": "pending"
+    }
+]
