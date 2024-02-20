@@ -1,3 +1,5 @@
+import { Model } from 'sequelize'
+
 export type Status = 'pending' | 'confirmed' | 'cancelled'
 
 export interface Reservation {
@@ -20,3 +22,5 @@ export interface User {
 export type UserWithoutId = Omit<User, 'id'>
 
 export type ReservationWithoutId = Omit<Reservation, 'id'>
+
+export type UserModel = Model & User

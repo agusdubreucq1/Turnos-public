@@ -3,7 +3,7 @@ import { validMail } from '../utils/mail'
 
 export const registerSchema = z.object({
   email: z.string().email({ message: 'Invalid email' }).refine(async (value) => await validMail(value), { message: 'Invalid email' }),
-  password: z.string().min(6),
+  password: z.string().min(6, { message: 'El password debe tener al menos 6 caracteres' }),
   name: z.string(),
   isAdmin: z.boolean().optional()
 })
