@@ -110,3 +110,5 @@ describe('mail validation', () => {
     expect(value).toBe(true)
   })
 })
+
+

@@ -1,12 +1,6 @@
 
 import { UserModel } from '../../models/utils/user'
-import { server } from '../../index'
-import { close } from '../../models/sequelize/config'
 import { api } from './helper'
-
-beforeAll(async () => {
-  await UserModel.deleteAllUsers()
-})
 
 describe('register', () => {
   test('register incorrect password', async () => {
@@ -19,7 +13,7 @@ describe('register', () => {
       })
       .expect(400)
     const users = await UserModel.getAllUsers()
-    expect(users).toHaveLength(0)
+    expect(users).toHaveLength(1)
   })
 
   test('register correct', async () => {
@@ -33,7 +27,7 @@ describe('register', () => {
       .expect(200)
 
     const users = await UserModel.getAllUsers()
-    expect(users).toHaveLength(1)
+    expect(users).toHaveLength(2)
   })
 
   test('register incorrect email', async () => {
@@ -46,7 +40,7 @@ describe('register', () => {
       })
       .expect(400)
     const users = await UserModel.getAllUsers()
-    expect(users).toHaveLength(1)
+    expect(users).toHaveLength(2)
   })
 
   test('register repeat email', async () => {
@@ -59,7 +53,7 @@ describe('register', () => {
       })
       .expect(400)
     const users = await UserModel.getAllUsers()
-    expect(users).toHaveLength(1)
+    expect(users).toHaveLength(2)
   })
 
   test('register without name', async () => {
@@ -71,7 +65,7 @@ describe('register', () => {
       })
       .expect(400)
     const users = await UserModel.getAllUsers()
-    expect(users).toHaveLength(1)
+    expect(users).toHaveLength(2)
   })
 })
 
@@ -99,7 +93,28 @@ describe('login', () => {
   })
 })
 
-afterAll(async () => {
-  server.close()
-  await close()
+describe('middleware logguedIn', ()=>{
+  test('not loggued', async ()=>{
+    await api.post('/reservations').send({
+      algo: 'algo'
+    }).expect(401)
+  })
+
+  // test('loggued', async ()=>{
+  //   const res = await api.post('/auth/login').send({
+  //     email: 'dubreucq02@gmail.com',
+  //     password: '123456789',
+  //   })
+  //   const token = res.body.token
+
+  //   await api.post('/reservations').set('Authorization', `Bearer ${token}`).send({
+  //     canchaId
+  //   }).expect(200)
+  // })
+
+  test('wrong token', async ()=>{
+    await api.post('/reservations').set('Authorization', 'Bearer algo').send({
+      algo: 'algo'
+    }).expect(401)
+  })
 })
