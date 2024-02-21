@@ -1,3 +1,5 @@
 ./API_Turnos/node_modules
 /API_Turnos/node_modules
 /API_Turnos/.env
+/API_Turnos/coverage
+/API_Turnos/build
