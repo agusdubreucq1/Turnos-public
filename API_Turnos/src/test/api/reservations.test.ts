@@ -23,14 +23,13 @@ describe('reservations', () => {
     const token = res.body.token
     const user = res.body.user
 
-    // const token = await getToken()
-
     const resReservation = await api
       .post('/reservations')
       .set('Authorization', `Bearer ${token}`)
       .send({
         date: '2024-01-01',
         time: '12:00',
+        duration: 30,
         userId: user.id,
         canchaId: 1,
       })

@@ -1,5 +1,6 @@
 import { isBiggerThan, isDateValid, isTimeValid } from '../utils/date'
 import { validMail } from '../utils/mail'
+import { generateTimeArrayByDuration, generateTimeArrayByRange, generateTimeArrayFree } from '../utils/time'
 
 describe('first time posible', () => {
   test('00:00', () => {
@@ -111,4 +112,89 @@ describe('mail validation', () => {
   })
 })
 
+describe('generate array time', () => {
+  test('generate array time', () => {
+    expect(generateTimeArrayByRange('00:00', '01:00')).toEqual(['00:00', '00:30'])
+  })
 
+  test('generate array time', () => {
+    expect(generateTimeArrayByRange('08:00', '10:00')).toEqual(['08:00', '08:30', '09:00', '09:30'])
+  })
+
+  test('time not valid', () => {
+    const fn = (): void => {
+      generateTimeArrayByRange('01:00', '00:00')
+    }
+    expect(fn).toThrow()
+  })
+
+  test('wrong parameters', () => {
+    const fn = (): void => {
+      generateTimeArrayByRange('12', '12,4')
+    }
+    expect(fn).toThrow()
+  })
+
+  test('generate by duration', () => {
+    expect(generateTimeArrayByDuration('00:00', 30)).toEqual(['00:00'])
+  })
+
+  test('generate by duration', () => {
+    expect(generateTimeArrayByDuration('00:00', 60)).toEqual(['00:00', '00:30'])
+  })
+
+  test('generate by duration', () => {
+    expect(generateTimeArrayByDuration('00:00', 90)).toEqual(['00:00', '00:30', '01:00'])
+  })
+
+  test('generate by duration', () => {
+    expect(generateTimeArrayByDuration('00:00', 120)).toEqual(['00:00', '00:30', '01:00', '01:30'])
+  })
+
+  test('generate by duration', () => {
+    const fn = () => {
+      generateTimeArrayByDuration('00:00', 110)
+    }
+    expect(fn).toThrow()
+  })
+
+  test('generate by duration', () => {
+    const fn = () => {
+      generateTimeArrayByDuration('00:12', 120)
+    }
+    expect(fn).toThrow()
+  })
+})
+
+describe('get Time array free', () => {
+  test('get Time array free', () => {
+    const timeArray = generateTimeArrayFree('00:00', '01:00', ['00:00', '00:30', '01:00', '01:30'])
+    expect(timeArray).toEqual([])
+  })
+
+  test('get Time array free', () => {
+    const timeArray = generateTimeArrayFree('08:00', '12:00', ['08:00', '08:30'], ['10:30', '11:00'])
+    expect(timeArray).toEqual(['09:00', '09:30', '10:00', '11:30'])
+  })
+
+  test('get Time array free', () => {
+    const fn = () => {
+      generateTimeArrayFree('13:00', '12:00', ['08:00', '08:30'], ['10:30', '11:00'])
+    }
+    expect(fn).toThrow()
+  })
+
+  test('get Time array free', () => {
+    const fn = () => {
+      generateTimeArrayFree('11:00', '12:00', ['08:20', '08:30'], ['10:30', '11:00'])
+    }
+    expect(fn).toThrow()
+  })
+
+  test('get Time array free', () => {
+    const fn = () => {
+      generateTimeArrayFree('13:00', '12', ['08:00', '08:30'], ['10:30', '11:00'])
+    }
+    expect(fn).toThrow()
+  })
+})

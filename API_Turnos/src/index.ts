@@ -1,5 +1,7 @@
+// index.ts
 import { app } from './app'
 import { sync } from './models/sequelize/config'
+
 const PORT = 3000
 
 export const server = app.listen(PORT, async () => {

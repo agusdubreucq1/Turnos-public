@@ -4,6 +4,12 @@ export const isTimeValid = (time: string): boolean => {
   return regex.test(time)
 }
 
+export const isTimeValidExact = (time: string): boolean => {
+  const regex = /^(0?[0-9]|1\d|2[0-3]):(00|30)$/
+
+  return regex.test(time)
+}
+
 export const isDateValid = (date: string): boolean => {
   const regex = /^\d{4}(-|\/)\d{2}(-|\/)\d{2}$/
 
