@@ -16,6 +16,13 @@ export const sequelize = new Sequelize(
   {
     host: dbHost || '',
     dialect: 'mysql',
-    logging: false
+    logging: false,
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      evict: 15000,
+      idle: 10000
+    }
   },
 )

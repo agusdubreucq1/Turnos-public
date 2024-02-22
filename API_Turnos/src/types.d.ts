@@ -1,16 +1,23 @@
 import { Model } from 'sequelize'
+import { Status } from './enums'
 
-export type Status = 'pending' | 'confirmed' | 'cancelled'
+//reservation
 
 export interface Reservation {
-  id: string
+  id: number
   canchaId: number
   userId: number
   date: string
   time: string
+  duration: number
   status: Status
 }
 
+export type ReservationWithoutId = Omit<Reservation, 'id'>
+
+export type ReservationModel = Model & Reservation
+
+//user
 export interface User {
   id: number
   name: string
@@ -19,8 +26,18 @@ export interface User {
   isAdmin?: boolean
 }
 
+export type UserFromToken = Omit<User, 'password'> 
+
 export type UserWithoutId = Omit<User, 'id'>
 
 export type ReservationWithoutId = Omit<Reservation, 'id'>
 
 export type UserModel = Model & User
+
+
+//shedules
+export interface SheduleDefaultModel extends Model {
+  id: number
+  horarioInicio: string
+  horarioFin: string
+}

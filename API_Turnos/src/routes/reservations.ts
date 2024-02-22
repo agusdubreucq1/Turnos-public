@@ -1,16 +1,11 @@
 import express from 'express'
-import * as reservationService from '../controllers/reservationsServices'
-import data from '../controllers/reservations.json'
+import middlewares from '../utils/middlewares'
+import reservationController from '../controllers/reservation/reservationController'
 
 const router = express.Router()
 
-router.get('/', (_req, res) => {
-  console.log('get reservations', reservationService.getReservations())
-  res.send(data)
-})
+router.get('/', reservationController.getReservations)
 
-router.post('/', (_req, res) => {
-  res.send('create reservation')
-})
+router.post('/', middlewares.isLoggedIn, reservationController.createReservation)
 
 export default router
