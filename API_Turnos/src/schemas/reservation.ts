@@ -5,7 +5,7 @@ import { Duration } from '../enums'
 
 export const reservationSchema = z.object({
   canchaId: z.number({ required_error: 'Cancha is required', invalid_type_error: 'Invalid Cancha' }),
-  userId: z.number({ required_error: 'User is required', invalid_type_error: 'Invalid User' }),
+  // userId: z.number({ required_error: 'User is required', invalid_type_error: 'Invalid User' }),
   date: z
     .string({ required_error: 'Date is required' })
     .refine((date) => isDateValid(date), { message: 'Invalid Date' }),

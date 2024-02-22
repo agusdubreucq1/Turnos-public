@@ -38,8 +38,8 @@ const register = async (req: Request, res: Response): Promise<void> => {
   if (existUser) {
     throw new Error('User already exist')
   }
-  const response = await UserModel.createUser(newUser)
-  res.send(response)
+  await UserModel.createUser(newUser)
+  res.send({email, name, isAdmin: isAdmin ?? false})
 }
 
 export default { login: catchedAsync(login), register: catchedAsync(register) }

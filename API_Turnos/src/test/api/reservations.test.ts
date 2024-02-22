@@ -1,5 +1,5 @@
 import { Status } from '../../enums'
-import { api } from './helper'
+import { api, getTokenAndUser } from './helper'
 
 describe('reservations', () => {
   test('get reservations', async () => {
@@ -8,20 +8,9 @@ describe('reservations', () => {
   })
 
   test('create reservation', async () => {
-    const res = await api
-      .post('/auth/login')
-      .send({
-        email: 'dubreucqpablo@gmail.com',
-        password: '123456789',
-      })
-      .expect(200)
+    const { token, user } = await getTokenAndUser()
 
-    expect(res.body.user.id).toBeDefined()
-    expect(res.body.token).toBeDefined()
-    expect(res.body.user.email).toBe('dubreucqpablo@gmail.com')
-
-    const token = res.body.token
-    const user = res.body.user
+    console.log('creando la reserva: ', {token, user})
 
     const resReservation = await api
       .post('/reservations')
@@ -29,12 +18,74 @@ describe('reservations', () => {
       .send({
         date: '2024-01-01',
         time: '12:00',
-        duration: 30,
-        userId: user.id,
+        duration: 90,
         canchaId: 1,
       })
       .expect(200)
 
     expect(resReservation.body.status).toBe(Status.confirmed)
+  })
+
+  test('/reservations/timesFreeByDate', async () => {
+    const res = await api
+      .get('/reservations/timesFreeByDate')
+      .send({
+        date: '2024-01-01',
+      })
+      .expect(200)
+    console.log(res.body)
+    expect(res.body).not.toContain('12:00')
+    expect(res.body).toContain('11:30')
+  })
+
+  test('/reservations/timesFreeByDate', async () => {
+    await api.get('/reservations/timesFreeByDate').expect(400)
+  })
+
+  test('create reservation', async () => {
+    const { token } = await getTokenAndUser()
+
+    const resReservation = await api
+      .post('/reservations')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        date: '2024-01-01',
+        time: '09:00',
+        duration: 90,
+        canchaId: 1,
+      })
+      .expect(200)
+
+    expect(resReservation.body.status).toBe(Status.confirmed)
+  })
+
+  test('create reservation equal', async () => {
+    const { token } = await getTokenAndUser()
+
+    await api
+      .post('/reservations')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        date: '2024-01-01',
+        time: '09:00',
+        duration: 60,
+        canchaId: 1,
+      })
+      .expect(400)
+  })
+
+  test('create reservation equal, but different cancha', async () => {
+    const { token } = await getTokenAndUser()
+
+    await api
+      .post('/reservations')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        date: '2024-01-01',
+        time: '09:00',
+        duration: 60,
+        canchaId: 2,
+      })
+      .expect(400)
   })
 })

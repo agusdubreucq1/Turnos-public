@@ -50,3 +50,10 @@ export const generateTimeArrayFree = (start: string, end: string, ...timeArrays:
   })
   return allTimes.filter((time) => !bookedTimes.has(time))
 }
+
+export const isRangeFree = (range: string[], freeTimes: string[]): boolean => {
+  for(const time of range){
+    if (!freeTimes.includes(time)) return false
+  }
+  return true
+}

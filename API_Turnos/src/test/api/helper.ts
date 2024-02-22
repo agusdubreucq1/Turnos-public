@@ -4,6 +4,7 @@ import { UserModel } from '../../models/utils/user'
 import { ReservationModel } from '../../models/utils/reservation'
 import { server } from '../..'
 import { close } from '../../models/sequelize/config'
+import { UserFromToken } from '../../types'
 
 export const api = supertest(app)
 
@@ -22,11 +23,14 @@ afterAll(async () => {
   await close()
 })
 
-// export const getToken = async () => {
-//   const res = await api.post('/auth/login').send({
-//     email: 'dubreucq02@gmail.com',
-//     password: '123456789',
-//   })
-//   const token = res.body.token as string
-//   return token
-// }
+export const getTokenAndUser = async () => {
+  const res = await api.post('/auth/login').send({
+    email: 'dubreucqpablo@gmail.com',
+    password: '123456789',
+  })
+  const token = res.body.token as string
+  const user = res.body.user as UserFromToken
+
+  console.log({token, user})
+  return {token, user}
+}

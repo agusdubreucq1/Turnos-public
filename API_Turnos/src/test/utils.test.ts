@@ -1,6 +1,11 @@
 import { isBiggerThan, isDateValid, isTimeValid } from '../utils/date'
 import { validMail } from '../utils/mail'
-import { generateTimeArrayByDuration, generateTimeArrayByRange, generateTimeArrayFree } from '../utils/time'
+import {
+  generateTimeArrayByDuration,
+  generateTimeArrayByRange,
+  generateTimeArrayFree,
+  isRangeFree,
+} from '../utils/time'
 
 describe('first time posible', () => {
   test('00:00', () => {
@@ -196,5 +201,52 @@ describe('get Time array free', () => {
       generateTimeArrayFree('13:00', '12', ['08:00', '08:30'], ['10:30', '11:00'])
     }
     expect(fn).toThrow()
+  })
+})
+
+describe('istimefree', () => {
+  test('istimefree', () => {
+    const freeTime = generateTimeArrayByRange('08:00', '12:00')
+    const range = ['09:00', '09:30', '10:00']
+    expect(isRangeFree(range, freeTime)).toBe(true)
+  })
+
+  test('istimefree', () => {
+    const freeTime = generateTimeArrayFree('08:00', '12:00', ['08:00', '08:30'], ['10:00', '10:30'])
+    const range = ['09:00', '09:30', '10:00']
+    expect(isRangeFree(range, freeTime)).toBe(false)
+  })
+
+  test('istimefree', () => {
+    const freeTime = [
+      '08:00',
+      '08:30',
+      '09:00',
+      '09:30',
+      '10:00',
+      '10:30',
+      '11:00',
+      '11:30',
+      '12:00',
+      '12:30',
+      '13:00',
+      '13:30',
+      '14:00',
+      '14:30',
+      '15:00',
+      '15:30',
+      '16:00',
+      '16:30',
+      '17:00',
+      '17:30',
+      '18:00',
+      '18:30',
+      '19:00',
+      '19:30',
+      '20:00',
+      '20:30',
+    ]
+    const range = ['09:00', '09:30', '10:00']
+    expect(isRangeFree(range, freeTime)).toBe(true)
   })
 })

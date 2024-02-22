@@ -6,11 +6,14 @@ import { Status } from './enums'
 export interface Reservation {
   id: number
   canchaId: number
-  userId: number
   date: string
   time: string
   duration: number
   status: Status
+}
+
+export interface ReservationWithUserId extends Reservation {
+  userId: number
 }
 
 export type ReservationWithoutId = Omit<Reservation, 'id'>
@@ -41,3 +44,11 @@ export interface SheduleDefaultModel extends Model {
   horarioInicio: string
   horarioFin: string
 }
+
+//formato de tiempo libre
+export interface FreeTime {
+  [canchaId: number]: string[]
+}
+
+export type ReservationFilteredByCancha = Record<number, Reservation[]>
+

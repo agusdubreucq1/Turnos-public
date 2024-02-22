@@ -1,6 +1,9 @@
-import { Reservation as ReservationType, ReservationWithoutId } from '../../types'
+import { FreeTime, Reservation as ReservationType, ReservationWithoutId } from '../../types'
+import { filterReservationByCancha, generateFreeTimeFilteredByCancha } from '../../utils/reservation'
 import { generateTimeArrayByDuration, generateTimeArrayFree } from '../../utils/time'
 import { Reservation } from '../sequelize/reservation'
+import { CanchasModel } from './canchas'
+import { SheduleDefaultModel } from './sheduleDefault'
 
 export const ReservationModel = {
   getReservations: async () => {
@@ -8,18 +11,36 @@ export const ReservationModel = {
     return reservations
   },
 
-  getTimesFreeByDate: async (date: string) => {
+  getTimesFreeByDateAndCancha: async (date: string, canchaId: number) => {
     const reservations: ReservationType[] = await Reservation.findAll({
       where: {
-        date: date
-      }
+        date: date,
+        canchaId: canchaId,
+      },
     })
-    const times = reservations.map(reservation => {
-      return generateTimeArrayByDuration(reservation.time, reservation.duration)
+    console.log('RESERVATIONS: ', reservations)
+    const times = reservations.map((reservation) => {
+      return generateTimeArrayByDuration(reservation.time.slice(0, 5), reservation.duration)
     })
-    return generateTimeArrayFree('08:00', '21:00', ...times)
+    const [horarioInicio, horarioFin] = await SheduleDefaultModel.getTimes()
+    return generateTimeArrayFree(horarioInicio ?? '08:00', horarioFin ?? '21:00', ...times)
     //TODO: agregar horarios dinamicos de start y end
+  },
 
+  getTimesFreeByDate: async (date: string): Promise<FreeTime> => {
+    const reservations: ReservationType[] = await Reservation.findAll({
+      where: {
+        date: date,
+      },
+    })
+    const canchas = (await CanchasModel.getAll()).map((cancha) => cancha.id)
+    const reservationsByCanchaId = filterReservationByCancha(reservations, canchas)
+
+    const freeTimes = await generateFreeTimeFilteredByCancha(canchas, reservationsByCanchaId)
+
+    return freeTimes
+    //TODO: agregar horarios dinamicos de start y end
+    //TODO: refactorizar
   },
 
   getReservationById: async (id: string) => {
@@ -32,8 +53,8 @@ export const ReservationModel = {
     return createdReservation
   },
 
-  deleteAllReservations: async() => {
-    const deletedReservations = await Reservation.destroy({truncate: true})
+  deleteAllReservations: async () => {
+    const deletedReservations = await Reservation.destroy({ truncate: true })
     return deletedReservations
-  }
+  },
 }
