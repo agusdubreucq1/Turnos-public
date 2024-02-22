@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { loginSchema, registerSchema } from '../../schemas/login'
-import { UserWithoutId } from '../../types'
+import { UserFromToken, UserWithoutId } from '../../types'
 import { UserModel } from '../../models/utils/user'
 import { catchedAsync } from '../../utils/catchedAsync'
 import bcrypt from 'bcrypt'
@@ -20,7 +20,8 @@ const login = async (req: Request, res: Response): Promise<void> => {
   if (!isCorrectPassword) {
     throw new Error('email or password incorrect')
   }
-  const token = jwt.sign({ id: user.id, email: user.email, isAdmin: user.isAdmin }, process.env.JWT_SECRET!)
+  const userFromToken: UserFromToken = { id: user.id, email: user.email, name: user.name, isAdmin: user.isAdmin }
+  const token = jwt.sign(userFromToken, process.env.JWT_SECRET!)
   res.send({ token, user: { id: user.id, name: user.name, email: user.email, isAdmin: user.isAdmin } })
 }
 
