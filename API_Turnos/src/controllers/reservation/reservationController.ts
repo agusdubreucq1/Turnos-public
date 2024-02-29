@@ -3,7 +3,9 @@ import { ReservationModel } from '../../models/utils/reservation'
 import { catchedAsync } from '../../utils/catchedAsync'
 import middlewares from '../../utils/middlewares'
 import { reservationSchema } from '../../schemas/reservation'
-import { generateTimeArrayByDuration, isRangeFree } from '../../utils/time'
+import { generateTimeArrayByDuration, generateTimeArrayByRange, isRangeFree } from '../../utils/time'
+import { SheduleDefaultModel } from '../../models/utils/sheduleDefault'
+import { ResponseReservations} from '../../types'
 // import { FreeTime } from '../../types'
 
 const getReservations = async (_req: Request, res: Response) => {
@@ -30,12 +32,17 @@ const createReservation = async (req: Request, res: Response) => {
 
 const getTimesFreeForDate = async (req: Request, res: Response) => {
   middlewares.logguerReq(req, 'get times free')
-  const { date } = req.body
+  const { date } = req.params
   if (!date) {
     throw new Error('date is required')
   }
   const data = await ReservationModel.getTimesFreeByDate(date)
-  res.send(data)
+  const [openTime, closeTime] = await SheduleDefaultModel.getTimes()
+  const response: ResponseReservations = {
+    timeFree: data,
+    openingTime: generateTimeArrayByRange(openTime ?? '08:00', closeTime ?? '22:00')
+  }
+  res.send(response)
 }
 
 export default {

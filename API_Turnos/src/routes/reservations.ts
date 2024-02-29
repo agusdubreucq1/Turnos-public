@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.get('/', reservationController.getReservations)
 
-router.get('/timesFreeByDate',  reservationController.getTimesFreeForDate)
+router.get('/timesFreeByDate/:date',  reservationController.getTimesFreeForDate)
 
 router.post('/', middlewares.isLoggedIn, reservationController.createReservation)
 

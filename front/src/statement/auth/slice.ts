@@ -1,25 +1,36 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { AuthState } from "../../vite-env";
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { AuthState, ResponseFromLogin } from '../../vite-env'
+
+const resetState: AuthState = {
+    isAuthenticated: false,
+    user: {
+    },
+  }
 
 const initialState: AuthState = (() => {
-    const state = localStorage.getItem("auth")
-    if(state) {
-        return JSON.parse(state)
-    }
-    const newstate: AuthState = {
-        isAuthenticated: false,
-        user: {
-            name: null,
-            email: null,
-            isAdmin: null
-        },
-        token: null
-    }
-    return newstate
+  const state = localStorage.getItem('__redux__state__')
+  if (state && JSON.parse(state)?.auth) {
+    return JSON.parse(state).auth
+  }
+  return resetState
 })()
 
-createSlice({
-    name: "auth",
-    initialState: initialState,
-    reducers: {},
+
+const authSlice = createSlice({
+  name: 'auth',
+  initialState: initialState,
+  reducers: {
+    setAuth: (state, action: PayloadAction<ResponseFromLogin>) => {
+      state.isAuthenticated = true
+      state.user = action.payload.user
+      state.token = action.payload.token
+    },
+    logoutAuth: ()=>{
+        return resetState
+    }
+  },
 })
+
+export default authSlice.reducer
+
+export const { setAuth, logoutAuth } = authSlice.actions

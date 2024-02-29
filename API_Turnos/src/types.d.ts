@@ -29,14 +29,13 @@ export interface User {
   isAdmin?: boolean
 }
 
-export type UserFromToken = Omit<User, 'password'> 
+export type UserFromToken = Omit<User, 'password'>
 
 export type UserWithoutId = Omit<User, 'id'>
 
 export type ReservationWithoutId = Omit<Reservation, 'id'>
 
 export type UserModel = Model & User
-
 
 //shedules
 export interface SheduleDefaultModel extends Model {
@@ -50,5 +49,9 @@ export interface FreeTime {
   [canchaId: number]: string[]
 }
 
-export type ReservationFilteredByCancha = Record<number, Reservation[]>
+export interface ResponseReservations {
+  timeFree: FreeTime
+  openingTime:string[]
+}
 
+export type ReservationFilteredByCancha = Record<number, Reservation[]>
