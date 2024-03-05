@@ -78,8 +78,8 @@ const FormReserva: React.FC<Props> = ({ date, initialTime, canchaId, onCancel })
                     </div>
                 </div>
                 <div className='flex gap-4 w-full' >
-                    <button onClick={onCancel} disabled={isPending} className=' bg-red-500 w-full text-white p-2 rounded-md hover:opacity-90 transition-opacity'>Cancelar</button>
-                    <button type='submit' onClick={onSubmit} disabled={isPending} className={`bg-green-500 w-full text-white p-2 rounded-md hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity`}>Reservar</button>
+                    <Modal.Button onClick={onCancel} disabled={isPending} typeOfButton='cancel' text='Cancelar' />
+                    <Modal.Button type='submit' onClick={onSubmit} disabled={isPending} typeOfButton='confirm' text='Reservar' />
                 </div>
             </form>
         </Modal>
