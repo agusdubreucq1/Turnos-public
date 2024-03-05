@@ -3,3 +3,5 @@
 /API_Turnos/.env
 /API_Turnos/coverage
 /API_Turnos/build
+/API_Turnos/src/utils/esportime-64845-firebase-adminsdk-tkyin-519ebd9ae7.json
+/front/src/services/initializer.ts

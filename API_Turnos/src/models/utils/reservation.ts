@@ -1,6 +1,8 @@
+import { Transaction } from 'sequelize'
 import { FreeTime, Reservation as ReservationType, ReservationWithoutId } from '../../types'
 import { filterReservationByCancha, generateFreeTimeFilteredByCancha } from '../../utils/reservation'
 import { generateTimeArrayByDuration, generateTimeArrayFree } from '../../utils/time'
+import { sequelize } from '../sequelize/conection'
 import { Reservation } from '../sequelize/reservation'
 import { CanchasModel } from './canchas'
 import { SheduleDefaultModel } from './sheduleDefault'
@@ -11,12 +13,16 @@ export const ReservationModel = {
     return reservations
   },
 
-  getTimesFreeByDateAndCancha: async (date: string, canchaId: number) => {
+  getTimesFreeByDateAndCancha: async (date: string, canchaId: number, transaccion?: Transaction) => {
+    if(transaccion === undefined) {
+      transaccion = await sequelize.transaction({ autocommit: false })
+    }
     const reservations: ReservationType[] = await Reservation.findAll({
       where: {
         date: date,
         canchaId: canchaId,
       },
+      transaction: transaccion
     })
     console.log('RESERVATIONS: ', reservations)
     const times = reservations.map((reservation) => {
@@ -48,8 +54,20 @@ export const ReservationModel = {
     return reservation
   },
 
-  createReservation: async (reservation: ReservationWithoutId) => {
-    const createdReservation = await Reservation.create(reservation)
+  getReservationsByUser: async (userId: number) => {
+    const reservations = await Reservation.findAll({
+      where: {
+        userId: userId,
+      }
+    })
+    return reservations
+  },
+
+  createReservation: async (reservation: ReservationWithoutId, transaccion?: Transaction) => {
+    if(transaccion === undefined) {
+      transaccion = await sequelize.transaction({ autocommit: false })
+    }
+    const createdReservation = await Reservation.create(reservation, { transaction: transaccion })
     return createdReservation
   },
 

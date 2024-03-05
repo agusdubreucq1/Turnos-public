@@ -4,6 +4,9 @@ import auth from '../../services/auth';
 import { useAppDispatch, useAppSelector } from '../hooks/store';
 import { setAuth } from '../../statement/auth/slice';
 import { Navigate } from 'react-router-dom';
+// import { firebaseApp } from '../../services/initializer';
+import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
+import { firebaseApp } from '../../services/initializer';
 
 const Login: React.FC = () => {
     const dispatch = useAppDispatch()
@@ -38,8 +41,25 @@ const Login: React.FC = () => {
         }
     }
 
-    if(isAuthenticated){
+    if (isAuthenticated) {
         return <Navigate to='/' />
+    }
+
+    const loginWithGoogle = async () => {
+        try {
+            const provider = new GoogleAuthProvider()
+            const auth = getAuth(firebaseApp)
+            const result = await signInWithPopup(auth, provider)
+            const token = await result.user.getIdToken()
+            const email = result.user.email || ''
+            const name = result.user.displayName || ''
+            dispatch(setAuth({ token, user: { name, email } }))
+            console.log(result)
+            console.log({ token, user: { name, email } })
+        } catch (e) {
+            console.log(e)
+        }
+        
     }
 
     return (
@@ -49,6 +69,7 @@ const Login: React.FC = () => {
                 <Form.Input value={login.password} onChange={onChange} label='Password' placeholder='********' name='password' type='password' />
                 <Form.Button onClick={onLogin} text='Login' />
             </Form>
+            <button className='my-4' onClick={loginWithGoogle}>Iniciar sesion con google</button>
         </section>
     );
 };
