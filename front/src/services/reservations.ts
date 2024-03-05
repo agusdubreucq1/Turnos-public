@@ -29,3 +29,12 @@ export const createReservation = async ({date, time, duration, canchaId, token}:
     })
     return data.data as ResponseByCreateReservation
 }
+
+export const getReservationsByUser = async (token: string) => {
+    const data = await axios.get(`${API_URL}/reservations/user`, {
+        headers:{
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return data.data as ResponseByCreateReservation[]
+}
