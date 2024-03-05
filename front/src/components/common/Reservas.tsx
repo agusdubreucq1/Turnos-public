@@ -5,6 +5,7 @@ import { getReservations } from '../../services/reservations';
 import dayjs from 'dayjs';
 import FormReserva from './FormReserva';
 import { useAppSelector } from '../hooks/store';
+import SkeletonReservas from './SkeletonReservas';
 
 const response: ResponseReservations = {
     "timeFree": {
@@ -23,7 +24,7 @@ const Reservas: React.FC = () => {
         canchaId: "",
         initialTime: '08:00'
     })
-    const { data = response, isLoading, isError} = useQuery<ResponseReservations>(
+    const { data = response, isLoading, isError } = useQuery<ResponseReservations>(
         {
             queryKey: ['reservations', date],
             queryFn: async () => await getReservations(date),
@@ -58,14 +59,15 @@ const Reservas: React.FC = () => {
     return (
         <section className='w-full flex flex-col items-center'>
             {FormData.show && isAuth && <FormReserva onCancel={hideModal} {...FormData} />}
-            {isLoading && <p>Cargando...</p>}
+            {/* {isLoading && <p>Cargando...</p>} */}
             {isError && <p>Error</p>}
             <div className='w-full max-w-2xl flex flex-col items-center'>
-                <div className='flex gap-4 p-1 text-white bg-slate-700 justify-around w-full border border-black'>
+                <div className='flex gap-4 p-1 text-white bg-primary justify-around w-full border border-black'>
                     <div onClick={subDay}>{'<'}</div>
                     <p>{date}</p>
                     <div onClick={addDay}>{'>'}</div>
                 </div>
+
                 <header className='w-full flex justify-around border border-black bg-white'>
                     <div className='w-full flex justify-center outline outline-1 outline-black p-1'><p>Horarios</p></div>
                     {
@@ -75,6 +77,9 @@ const Reservas: React.FC = () => {
                             </div>)
                     }
                 </header>
+                {
+                    isLoading ? <SkeletonReservas></SkeletonReservas> : null
+                }
                 <div className='w-full flex flex-col items-center'>
                     {
                         openingTime.map((horario, index) =>

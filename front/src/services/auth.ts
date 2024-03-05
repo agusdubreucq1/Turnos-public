@@ -26,7 +26,7 @@ interface Register extends Login{
 
 const register = async ({name, email, password}: Register)=>{
   try {
-    const res = await axios.post(`${API_URL}/auth/login`, {
+    const res = await axios.post(`${API_URL}/auth/register`, {
       email,
       password,
       name
