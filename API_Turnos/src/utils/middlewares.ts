@@ -3,7 +3,6 @@ import { ZodError } from 'zod'
 import jwt from 'jsonwebtoken'
 import { config } from 'dotenv'
 import { UserFromToken } from '../types'
-import { adminFirebase } from './firebase.config'
 config()
 
 const logguer = (request: Request, _response: Response, next: NextFunction) => {
@@ -47,18 +46,11 @@ const getToken = (request: Request) => {
 }
 
 const isLoggedIn = async (request: Request, response: Response, next: NextFunction) => {
-  logguerReq(request, 'intentando loguearse')
-  try {
-    // const token = getToken(request)
-    console.log(await adminFirebase.auth().listUsers(10))
-    // const response = await adminFirebase.auth().verifyIdToken(token)
-    // console.log(response)
-  } catch (error) {
-    console.log('error al intentar loguearse con google', error)
-  }
+  logguerReq(request, 'verificar login')
   try {
     const userFromToken = jwt.verify(getToken(request), process.env.JWT_SECRET!) as UserFromToken
-    if (userFromToken.id) {
+    console.log('-----', userFromToken)
+    if (userFromToken.userId) {
       response.locals.user = userFromToken
       next()
       return

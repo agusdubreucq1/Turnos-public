@@ -22,7 +22,7 @@ const getReservationsByUser = async (req: Request, res: Response) => {
 }
 
 const createReservation = async (req: Request, res: Response) => {
-  middlewares.logguerReq(req, 'create reservation')
+  middlewares.logguerReq(req, '-------------create reservation')
   await reservationSchema.parseAsync(req.body)
   const { date, duration, time, canchaId } = req.body
 

@@ -4,10 +4,10 @@ import bcrypt from 'bcrypt'
 import { User, UserModel} from '../../types'
 
 const User = sequelize.define<UserModel>('users', {
-  id: {
-    type: DataTypes.INTEGER,
+  userId: {
+    type: DataTypes.UUID,
     primaryKey: true,
-    autoIncrement: true,
+    defaultValue: DataTypes.UUIDV4
   },
   name: {
     type: DataTypes.STRING,

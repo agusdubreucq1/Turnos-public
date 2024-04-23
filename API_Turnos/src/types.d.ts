@@ -22,7 +22,7 @@ export type ReservationModel = Model & Reservation
 
 //user
 export interface User {
-  id: number
+  userId: number
   name: string
   email: string
   password: string
@@ -31,7 +31,7 @@ export interface User {
 
 export type UserFromToken = Omit<User, 'password'>
 
-export type UserWithoutId = Omit<User, 'id'>
+export type UserWithoutId = Omit<User, 'userId'>
 
 export type ReservationWithoutId = Omit<Reservation, 'id'>
 

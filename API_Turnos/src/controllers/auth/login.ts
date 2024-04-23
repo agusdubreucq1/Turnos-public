@@ -20,9 +20,10 @@ const login = async (req: Request, res: Response): Promise<void> => {
   if (!isCorrectPassword) {
     throw new Error('email or password incorrect')
   }
-  const userFromToken: UserFromToken = { id: user.id, email: user.email, name: user.name, isAdmin: user.isAdmin }
+  console.log('--------user---------\n',user, '\n--------user---------\n')
+  const userFromToken: UserFromToken = { userId: user.userId, email: user.email, name: user.name, isAdmin: user.isAdmin }
   const token = jwt.sign(userFromToken, process.env.JWT_SECRET!)
-  res.send({ token, user: { id: user.id, name: user.name, email: user.email, isAdmin: user.isAdmin } })
+  res.send({ token, user: { id: user.userId, name: user.name, email: user.email, isAdmin: user.isAdmin } })
 }
 
 const register = async (req: Request, res: Response): Promise<void> => {

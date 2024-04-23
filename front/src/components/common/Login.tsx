@@ -4,9 +4,10 @@ import auth from '../../services/auth';
 import { useAppDispatch, useAppSelector } from '../hooks/store';
 import { setAuth } from '../../statement/auth/slice';
 import { Navigate } from 'react-router-dom';
-// import { firebaseApp } from '../../services/initializer';
 import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
 import { firebaseApp } from '../../services/initializer';
+
+import google from '/logo_google.webp'
 
 const Login: React.FC = () => {
     const dispatch = useAppDispatch()
@@ -59,7 +60,7 @@ const Login: React.FC = () => {
         } catch (e) {
             console.log(e)
         }
-        
+
     }
 
     return (
@@ -69,7 +70,10 @@ const Login: React.FC = () => {
                 <Form.Input value={login.password} onChange={onChange} label='Password' placeholder='********' name='password' type='password' />
                 <Form.Button onClick={onLogin} text='Login' />
             </Form>
-            <button className='my-4' onClick={loginWithGoogle}>Iniciar sesion con google</button>
+            <button onClick={loginWithGoogle} className="mt-4 shadow-md hover:shadow-sm transition-shadow text-[#757575] rounded-md flex gap-1 items-center p-2 justify-center bg-white">
+                <img src={google} alt="google" className='w-9' ></img>
+                <p className='font-medium text-sm'>Sign in with Google</p>
+            </button>
         </section>
     );
 };

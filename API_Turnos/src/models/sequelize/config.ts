@@ -9,7 +9,12 @@ Reservation.belongsTo(Canchas, {
   foreignKey: 'canchaId'
 })
 Reservation.belongsTo(User, {
-  foreignKey: 'userId'
+  foreignKey: 'userId',
+  foreignKeyConstraint: true,
+  constraints: false
+})
+User.hasMany(Reservation, {
+  foreignKey: 'userId',
 })
 
 export const sync = async (): Promise<void> => {

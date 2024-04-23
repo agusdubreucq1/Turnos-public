@@ -12,9 +12,9 @@ export const Reservation = sequelize.define<ReservationModel>('reservations', {
   canchaId: {
     type: DataTypes.INTEGER,
   },
-  userId: {
-    type: DataTypes.INTEGER,
-  },
+  // userId: {
+  //   type: DataTypes.UUID,
+  // },
   date: {
     type: DataTypes.DATEONLY,
   },

@@ -13,10 +13,12 @@ export const UserModel = {
   async getUserById(id: number) {
     return await User.findByPk(id)
   },
+  /*select * from users where id = ?*/
 
   async getUserByEmail(email: string) {
     return await User.findOne({ where: { email } })
   },
+  /* select * from users where email = ? */
 
   async deleteAllUsers() {
     return await User.destroy({ where: {}, truncate: true })

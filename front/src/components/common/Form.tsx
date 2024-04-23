@@ -15,7 +15,7 @@ interface FormType {
 
 const Form: FormType = ({ children, error=null, ...props }) => {
     return (
-        <div className='relative px-4 flex flex-col items-center bg-slate-300 '>
+        <div className='relative mb-4 px-4 flex flex-col items-center bg-slate-300 '>
             <form {...props} className='relative top-4 z-20 w-fit flex flex-col p-7 gap-4 min-w-96 border rounded-sm bg-white shadow-lg'>
                 {error && <div className='w-full flex justify-center p-3 bg-red-300 rounded-lg gap-3'>
                     <ErrorIcon className='w-5 aspect-square'></ErrorIcon>
